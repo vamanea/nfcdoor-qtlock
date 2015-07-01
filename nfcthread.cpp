@@ -87,7 +87,7 @@ void NFCThread::run()
     size_t rapdulen;
     uint32_t certlen, framelen, siglength;
     int frag, fragments;
-    uint8_t *cert = NULL, *signature = NULL;
+    uint8_t *cert = NULL, *certbuff, *signature = NULL;
 
     nfc_target nt;
 
@@ -152,6 +152,7 @@ void NFCThread::run()
         memcpy(&framelen, rapdu + 1, 4);
         memcpy(&certlen, rapdu + 5, 4);
         cert = (uint8_t*)malloc(certlen);
+        certbuff = cert;
         fragments = certlen / framelen + ((certlen % framelen) > 0);
         debugLine(QString("Ident: Frame len %1 certlen %2 fragments %3")
                .arg(framelen)
@@ -250,7 +251,7 @@ void NFCThread::run()
 
 restart:
         if (cert)
-            free(cert);
+            free(certbuff);
         if (signature)
             free(signature);
 
