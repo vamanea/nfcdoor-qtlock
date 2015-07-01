@@ -6,26 +6,53 @@ Item {
     width: 640
     height: 480
 
-    property alias button3: button3
-    property alias button2: button2
-    property alias button1: button1
+    property alias log: textArea1
+    property alias status: rectangle1
+    property alias caption: text1
 
-    RowLayout {
-        anchors.centerIn: parent
 
-        Button {
-            id: button1
-            text: qsTr("Press Me 1")
+    ColumnLayout {
+        id: columnLayout1
+        spacing: 2
+        anchors.fill: parent
+
+        Rectangle {
+            id: rectangle1
+            height: 150
+            color: "#ae1f1f"
+            radius: 1
+            border.color: "#696969"
+            border.width: 2
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+
+            Text {
+                id: text1
+                x: 0
+                y: 0
+                width: 301
+                height: 44
+                text: qsTr("Door LOCKED!")
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                font.family: "Verdana"
+                z: 1
+                font.pixelSize: 42
+            }
         }
 
-        Button {
-            id: button2
-            text: qsTr("Press Me 2")
-        }
-
-        Button {
-            id: button3
-            text: qsTr("Press Me 3")
+        TextArea {
+            id: textArea1
+            Layout.fillHeight: true
+            text: ""
+            readOnly: true
+            font.family: "Courier"
+            anchors.right: parent.right
+            anchors.rightMargin: 0
+            anchors.left: parent.left
+            anchors.leftMargin: 0
         }
     }
 }

@@ -4,18 +4,37 @@ import QtQuick.Window 2.2
 import QtQuick.Dialogs 1.2
 
 ApplicationWindow {
-    title: qsTr("Hello World")
-    width: 640
-    height: 480
+    id: applicationWindow1
+    title: qsTr("Door lock")
+    width: 800
+    height: 600
     visible: true
+
+    function nfcLog(line) {
+        mainForm.log.append(line);
+    }
+
+    function sigValidated(valid) {
+        console.log("Signature validated: ", valid)
+        if(valid) {
+            mainForm.status.color = "green";
+            mainForm.caption.text = "Door UNLOCKED!";
+        }
+        else {
+            mainForm.status.color = "#ae1f1f";
+            mainForm.caption.text = "Door LOCKED!";
+        }
+
+    }
+
+    function certValidated(valid) {
+        console.log("Certificate validated: ", valid)
+
+    }
 
     menuBar: MenuBar {
         Menu {
             title: qsTr("&File")
-            MenuItem {
-                text: qsTr("&Open")
-                onTriggered: messageDialog.show(qsTr("Open action triggered"));
-            }
             MenuItem {
                 text: qsTr("E&xit")
                 onTriggered: Qt.quit();
@@ -24,10 +43,15 @@ ApplicationWindow {
     }
 
     MainForm {
-        anchors.fill: parent
-        button1.onClicked: messageDialog.show(qsTr("Button 1 pressed"))
-        button2.onClicked: messageDialog.show(qsTr("Button 2 pressed"))
-        button3.onClicked: messageDialog.show(qsTr("Button 3 pressed"))
+        id: mainForm
+        anchors.top: parent.top
+        anchors.topMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
     }
 
     MessageDialog {

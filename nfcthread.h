@@ -13,7 +13,10 @@ public:
 
     void run();
 signals:
-    void tempReady(const QVariant &temp, const QVariant &humidity);
+    void nfcLog(const QVariant &line);
+    void certValidated(const QVariant &valid);
+    void sigValidated(const QVariant &valid);
+
 
 public slots:
     void terminate();
@@ -21,6 +24,7 @@ public slots:
 private:
     nfc_device *m_nfcDevice = NULL;
     nfc_context *m_nfcContext = NULL;
+    void debugLine(QString line);
     int send(uint8_t *capdu, size_t capdulen, uint8_t *rapdu, size_t *rapdulen);
 };
 
