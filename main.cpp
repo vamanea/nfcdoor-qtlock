@@ -24,8 +24,8 @@ int main(int argc, char *argv[])
 
     QObject::connect(nfcThread, SIGNAL(sigValidated(QVariant)),
                      mainWindow, SLOT(sigValidated(QVariant)));
-    QObject::connect(nfcThread, SIGNAL(certValidated(QVariant)),
-                     mainWindow, SLOT(certValidated(QVariant)));
+    QObject::connect(nfcThread, SIGNAL(certValidated(QVariant, QVariant)),
+                     mainWindow, SLOT(certValidated(QVariant, QVariant)));
 
     nfcThread->start(QThread::HighestPriority);
 

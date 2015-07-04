@@ -9,6 +9,7 @@ Item {
     property alias log: textArea1
     property alias status: rectangle1
     property alias caption: text1
+    property alias key: text2
 
 
     ColumnLayout {
@@ -35,11 +36,32 @@ Item {
                 width: 301
                 height: 44
                 text: qsTr("Door LOCKED!")
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                anchors.verticalCenterOffset: -24
+                anchors.horizontalCenterOffset: 0
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 font.family: "Verdana"
                 z: 1
                 font.pixelSize: 42
+            }
+
+            Text {
+                id: text2
+                x: 4
+                y: 2
+                width: 301
+                height: 44
+                text: qsTr("")
+                horizontalAlignment: Text.AlignHCenter
+                anchors.horizontalCenterOffset: 0
+                font.family: "Verdana"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                font.pixelSize: 36
+                anchors.verticalCenterOffset: 30
+                z: 2
             }
         }
 

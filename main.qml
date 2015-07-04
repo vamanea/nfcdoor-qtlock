@@ -10,27 +10,43 @@ ApplicationWindow {
     height: 600
     visible: true
 
-    function nfcLog(line) {
-        mainForm.log.append(line);
-    }
-
-    function sigValidated(valid) {
-        console.log("Signature validated: ", valid)
-        if(valid) {
+    function doorLock(lock) {
+        if(lock) {
             mainForm.status.color = "green";
             mainForm.caption.text = "Door UNLOCKED!";
         }
         else {
             mainForm.status.color = "#ae1f1f";
             mainForm.caption.text = "Door LOCKED!";
+            mainForm.key.text = "";
+        }
+    }
+
+
+    function nfcLog(line) {
+        mainForm.log.append(line);
+    }
+
+    function sigValidated(valid) {
+        console.log("Signature validated: ", valid)
+        doorLock(valid);
+        lockTimer.start();
+    }
+
+    function certValidated(valid, certname) {
+        console.log("Certificate validated: ", valid);
+        if (valid) {
+            console.log("Certificate name: "+ certname);
+            mainForm.key.text = certname;
         }
 
     }
 
-    function certValidated(valid) {
-        console.log("Certificate validated: ", valid)
-
-    }
+    Timer {
+        id: lockTimer;
+        interval: 10000; running: false; repeat: false
+        onTriggered: doorLock(false);
+    }// end of Timer
 
     menuBar: MenuBar {
         Menu {

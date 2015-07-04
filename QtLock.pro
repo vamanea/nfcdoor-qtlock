@@ -16,3 +16,6 @@ include(deployment.pri)
 
 HEADERS += \
     nfcthread.h
+
+DISTFILES += \
+    certs/cert.pem
