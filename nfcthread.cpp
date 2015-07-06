@@ -25,6 +25,14 @@ static uint8_t apdu_ident_frag[] = { 0x00, 0xe0, 0x01, 0x00};
 /* Challenge APDU header */
 static uint8_t apdu_challenge[] = { 0x00, 0xe0, 0x02, 0x00};
 
+
+void do_sha256(uint8_t *digest, const uint8_t *message, size_t len) {
+    SHA256_CTX ctx;
+    SHA256_Init(&ctx);
+    SHA256_Update(&ctx, message, len);
+    SHA256_Final(digest, &ctx);
+}
+
 QString cert_common_name(X509* cert)
 {
     char buf[256];
@@ -254,27 +262,25 @@ void NFCThread::run()
 
                 debugLine("Verifying Signature\n");
 
-                EVP_PKEY* key = X509_get_pubkey(phone);
+                EVP_PKEY *pkey = X509_get_pubkey(phone);
+                EC_KEY *key = EVP_PKEY_get1_EC_KEY(pkey);
+                uint8_t digest[32];
+                ECDSA_SIG *sig;
+                const unsigned char *sig_copy = signature;
+                sig = d2i_ECDSA_SIG(NULL, &sig_copy, siglength);
+                    printf("r: %s\n", BN_bn2hex(sig->r));
+                    printf("s: %s\n", BN_bn2hex(sig->s));
 
-                EVP_MD_CTX ct;
-                const EVP_MD *type;
-
-                EVP_MD_CTX_init(&ct);
-                type = EVP_sha1();
-
-                EVP_VerifyInit_ex(&ct,type, NULL);
-                EVP_VerifyUpdate(&ct,challenge,16);
-
-                if (EVP_VerifyFinal(&ct, signature, siglength, key) == 0) {
-                    debugLine("Signature valid");
+                do_sha256(digest, challenge, 16);
+                int verified = ECDSA_do_verify(digest, 32, sig, key);
+                if(verified == 1) {
+                   debugLine("Signature valid");
                     emit sigValidated(QVariant(true));
                 } else {
                     debugLine("Signature invalid");
                     emit sigValidated(QVariant(false));
                 }
 
-                EVP_MD_CTX_cleanup(&ct);
-                EVP_cleanup();
             } else {
                 debugLine(QString("Certificate Invalid %1\n").arg(X509_STORE_CTX_get_error(ctx)));
                 debugLine(QString("Valid error: %1\n").arg(X509_verify_cert_error_string(ctx->error)));
